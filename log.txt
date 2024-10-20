@@ -1,0 +1,8 @@
+Error type: access online link
+Source: https://www2.livefpl.net/leagues/32200
+Error: Exceeded 30 redirects. 
+--------------------------------
+Error type: access online link
+Source: https://www.livefpl.net/leagues/1704871
+Error: HTTPSConnectionPool(host='www.livefpl.net', port=443): Max retries exceeded with url: /leagues/1704871 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x106b5c4a0>: Failed to establish a new connection: [Errno 12] Cannot allocate memory')) 
+--------------------------------
