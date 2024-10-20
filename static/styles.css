@@ -7,8 +7,8 @@ h2 {
     display: flex;
     flex-direction: column; /* Stack items vertically on small screens */
     align-items: center; /* Center items */
-    margin: auto; /* Center menu */
-    width: 20%; /* Adjust width for smaller screens */
+    margin: auto;
+    width: 100%; /* Full width */
     margin-top: 20px;
 }
 
