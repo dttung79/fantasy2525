@@ -7,8 +7,8 @@ h2 {
     display: flex;
     flex-direction: column; /* Stack items vertically on small screens */
     align-items: center; /* Center items */
-    margin: auto;
-    width: 100%; /* Full width */
+    margin: auto; /* Center menu */
+    width: 20%; /* Adjust width for smaller screens */
     margin-top: 20px;
 }
 
@@ -99,4 +99,15 @@ tr:nth-child(even) {
     .chart-container {
         height: 400px; /* Increase height for better visibility on mobile */
     }
+}
+
+/* Add this to your existing CSS file */
+a {
+    color: #fff; /* Set link color */
+    text-decoration: none; /* Remove underline */
+}
+
+a:hover {
+    text-decoration: underline; /* Underline on hover */
+    color: #fff; /* Darker color on hover */
 }
