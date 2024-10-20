@@ -81,7 +81,8 @@ function initializeDataTable(data, leagueId, orderByLatestPoints = false) { // A
     });
 
     document.getElementById('data-table').style.display = 'table'; // Show the table
-    drawLineChart(data); // Add this line to draw the chart
+    if (orderByLatestPoints)
+        drawLineChart(data); // Add this line to draw the chart
 }
 // New function to draw a line chart
 function drawLineChart(data) {
@@ -91,13 +92,10 @@ function drawLineChart(data) {
     // Prepare data for each week
     const weeks = pointsData[0].length; // Number of weeks
     const rankings = Array.from({ length: weeks }, (_, weekIndex) => {
-        // Create an array of [team, points] pairs for the current week
         const teamPoints = teams.map((team, index) => ({
             team,
             points: pointsData[index][weekIndex],
         }));
-
-        // Sort teams by points in descending order and assign ranks
         teamPoints.sort((a, b) => b.points - a.points);
         return teamPoints.map((teamPoint, rank) => ({
             team: teamPoint.team,
@@ -105,30 +103,27 @@ function drawLineChart(data) {
         }));
     });
 
-    // Calculate latest points for sorting
     const latestPoints = teams.map((team, index) => pointsData[index][weeks - 1]);
-
-    // Create traces for each team, sorted by latest points
     const sortedTeams = teams
         .map((team, index) => ({ team, latestPoints: latestPoints[index] }))
-        .sort((a, b) => b.latestPoints - a.latestPoints) // Sort by latest points
-        .map(item => item.team); // Get sorted team names
+        .sort((a, b) => b.latestPoints - a.latestPoints)
+        .map(item => item.team);
 
     const traces = sortedTeams.map((team) => {
-        const index = teams.indexOf(team); // Get original index
+        const index = teams.indexOf(team);
         return {
-            x: Array.from({ length: weeks }, (_, i) => `Week ${i + 1}`), // Generate week labels
-            y: rankings.map(week => week.find(t => t.team === team).rank), // Get the rank for the team in each week
+            x: Array.from({ length: weeks }, (_, i) => `Week ${i + 1}`),
+            y: rankings.map(week => week.find(t => t.team === team).rank),
             mode: 'lines+markers',
             name: team,
             line: {
-                color: getRandomColor(), // Assign a unique color
+                color: getRandomColor(),
                 width: 2,
             },
             marker: {
                 size: 6,
             },
-            opacity: 1, // Set default opacity for all lines
+            opacity: 1,
         };
     });
 
@@ -139,41 +134,46 @@ function drawLineChart(data) {
         },
         yaxis: {
             title: 'Team Rank',
-            autorange: 'reversed', // Reverse the Y-axis so that rank 1 is at the top
+            autorange: 'reversed',
         },
-        hovermode: 'closest', // Show hover info for the closest point
-        showlegend: true, // Show legend
+        hovermode: 'closest',
+        showlegend: true,
         legend: {
-            orientation: 'v', // Vertical legend
-            x: 1.05, // Position legend to the right
-            y: 1, // Align legend to the top
-            traceorder: 'normal', // Order of legend items
+            orientation: 'h', // Change orientation to horizontal
+            x: 0.5, // Center the legend
+            y: -0.2, // Position it below the chart
+            xanchor: 'center', // Anchor the legend to the center
+            yanchor: 'top', // Anchor the legend to the top
+            traceorder: 'normal',
         },
     };
+
+    // Adjust layout for mobile screens
+    if (window.matchMedia("(max-width: 600px)").matches) {
+        layout.xaxis.title = 'Weeks';
+        layout.yaxis.title = 'Team Rank';
+        layout.xaxis.tickangle = -45; // Rotate x-axis labels
+    }
 
     Plotly.newPlot('line-chart', traces, layout);
 
     // Add hover event to highlight the selected line
     const chartDiv = document.getElementById('line-chart');
     chartDiv.on('plotly_hover', function(data) {
-        const index = data.points[0].curveNumber; // Get the index of the hovered line
-
-        // Set all traces to faded opacity
+        const index = data.points[0].curveNumber;
         const update = {
-            'opacity': traces.map((_, i) => (i === index ? 1 : 0.3)), // Fade all lines except the hovered one
-            'line.width': traces.map((_, i) => (i === index ? 4 : 2)), // Thicker line for the hovered one
-            'marker.size': traces.map((_, i) => (i === index ? 8 : 6)), // Larger markers for the hovered line
+            'opacity': traces.map((_, i) => (i === index ? 1 : 0.3)),
+            'line.width': traces.map((_, i) => (i === index ? 4 : 2)),
+            'marker.size': traces.map((_, i) => (i === index ? 8 : 6)),
         };
-
         Plotly.restyle('line-chart', update);
     });
 
     chartDiv.on('plotly_unhover', function() {
-        // Reset all lines to default when not hovering
         Plotly.restyle('line-chart', {
-            'opacity': traces.map(() => 1), // Reset opacity for all lines
-            'line.width': traces.map(() => 2), // Reset line width for all lines
-            'marker.size': traces.map(() => 6), // Reset marker size for all lines
+            'opacity': traces.map(() => 1),
+            'line.width': traces.map(() => 2),
+            'marker.size': traces.map(() => 6),
         });
     });
 }

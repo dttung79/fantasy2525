@@ -1,22 +1,32 @@
 h2 {
     color: #006400;
+    font-size: 2rem; /* Use rem for scalability */
 }
 
 .menu {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* Stack items vertically on small screens */
+    align-items: center; /* Center items */
     margin: auto;
-    width: 20%;
+    width: 100%; /* Full width */
     margin-top: 20px;
+}
+
+@media (min-width: 600px) {
+    .menu {
+        flex-direction: row; /* Change to row on larger screens */
+        justify-content: space-between; /* Space items evenly */
+        width: 50%; /* Adjust width for larger screens */
+    }
 }
 
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center content */
 }
 
 header {
@@ -24,21 +34,18 @@ header {
     color: #fff;
     text-align: center;
     padding: 20px;
+    width: 100%; /* Full width */
 }
 
 header h1 {
-    font-size: 48px;
+    font-size: 2.5rem; /* Use rem for scalability */
     margin: 0;
-}
-
-header a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 10px;
 }
 
 main {
     padding: 20px;
+    width: 90%; /* Use percentage for responsiveness */
+    max-width: 1200px; /* Limit max width */
 }
 
 footer {
@@ -46,24 +53,21 @@ footer {
     color: #fff;
     text-align: center;
     padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    position: relative; /* Change to relative for better flow */
+    width: 100%; /* Full width */
 }
 
-/* Define the table styles */
 table {
     border-collapse: collapse;
     width: 100%;
-    margin: 0 auto;
+    margin: 20px 0; /* Add margin for spacing */
     font-family: Arial, sans-serif;
-    font-size: 14px;
-    text-align: center;
+    font-size: 1rem; /* Use rem for scalability */
 }
 
 th,
 td {
-    padding: 8px;
+    padding: 10px; /* Increase padding for touch targets */
     border: 1px solid #ddd;
 }
 
@@ -74,4 +78,25 @@ th {
 
 tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+
+@media (max-width: 600px) {
+    h2 {
+        font-size: 1.5rem; /* Smaller font size on mobile */
+    }
+
+    table {
+        font-size: 0.9rem; /* Smaller font size for tables on mobile */
+    }
+}
+/* Add this to your existing CSS file */
+.chart-container {
+    width: 100%; /* Full width for mobile */
+    height: 300px; /* Default height */
+}
+
+@media (max-width: 600px) {
+    .chart-container {
+        height: 400px; /* Increase height for better visibility on mobile */
+    }
 }
