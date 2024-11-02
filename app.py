@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from fantasy_util import extract_data, read_team_week
-import math
+import os
+import pandas as pd
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -11,6 +12,43 @@ def index():
 @app.route('/week/<league_id>')
 def week(league_id):
     return build_league_page('week_tpl.html', league_id)
+
+@app.route('/week/<league_id>/save/<week_number>')
+def save_week(league_id, week_number):
+    csv_file = f"{league_id}_week.csv"
+
+    # Read the first line to get the latest week
+    if os.path.exists(csv_file):
+        latest_week = pd.read_csv(csv_file, nrows=1).columns[-1]  # Get the last column name
+        latest_week_number = int(latest_week[-1])  # Extract the week number from the column name
+
+        if week_number == latest_week_number:
+            return jsonify({"warning": "Week number is already the latest week."})
+
+        # Fetch live data for the league
+        live_url = f'https://www.livefpl.net/leagues/{league_id}'
+        team_week_names = read_team_week(league_id)  # Get team names for the league
+        live_data = extract_data(live_url, team_week_names)  # Fetch live data
+
+        # Prepare to read existing CSV data
+        df = pd.read_csv(csv_file)
+
+        # Extract live points and hits from the live data
+        live_points_hits = {}
+        for row in live_data:
+            team_name = row[1]  # Assuming team name is in the second column
+            points = row[3]  # Assuming live points are in the fourth column
+            hits = abs(row[4])  # Assuming hits are in the fifth column
+            live_points_hits[team_name] = f"{points}:{hits}"  # Store points and hits
+
+        # Add a new column for the current week with live points and hits
+        new_column = f'W{latest_week_number + 1}'
+        df[new_column] = df['Team'].map(live_points_hits)
+        df.to_csv(csv_file, index=False)
+
+        return jsonify({"message": "Week saved successfully."})
+    else:
+        return jsonify({"error": "CSV file does not exist."})
 
 @app.route('/api/week/<league_id>')
 def get_weeks_data(league_id):
