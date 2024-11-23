@@ -11,7 +11,6 @@ def read_team_week(league_id):
     with open(f'{league_file}', 'r') as f:
         lines = f.readlines()
     team_week_names = [line[:-1] for line in lines]
-    #print(team_week_names)
     return team_week_names
 
 # team_week_names = read_team_week()
@@ -42,7 +41,6 @@ def get_rounds(league):
         if f.endswith('.csv'):
             csv_files.append(int(f.split('.')[0]))
     csv_files.sort(reverse=True)
-    print(csv_files)
     return csv_files
 
 # get live scores of teams from livefpl.net url
@@ -78,7 +76,6 @@ def live_round(url, league, round_no):
 # extract data from livefpl.net url
 # data includes rank, team name, total points, live points, hits
 def extract_data(url_link, team_names):
-    #print(team_names)
     try:
         # Access online link using requests, then save it to reconstructed_soup
         response = requests.get(url_link)

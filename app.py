@@ -79,7 +79,6 @@ def get_weeks_data(league_id):
     lines = [line.strip().split(',') for line in lines]
     # insert header to the first row
     lines.insert(0, header.strip().split(','))
-    print(lines)
     
     return jsonify(lines)
 
@@ -107,10 +106,7 @@ def get_season_data(league_id):
 
         # Remove newline characters from team names
         season_team_names = [team_name.strip() for team_name in season_team_names]
-        print('Season team:', season_team_names)
-        print('Team week:', team_week_names)
         team_week_names = [team for team in team_week_names if team in season_team_names]
-        print('Team week after removed:', team_week_names)
     
     # Initialize a dictionary to hold cumulative points for each team
     cumulative_points = {}
@@ -167,7 +163,6 @@ def get_season_data(league_id):
     for team_name, weekly_data in season_table.items():
         output.append([team_name, *weekly_data])
     
-    print(output)
     return jsonify(output)
 
 
