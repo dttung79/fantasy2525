@@ -20,7 +20,7 @@ def save_week(league_id, week_number):
     # Read the first line to get the latest week
     if os.path.exists(csv_file):
         latest_week = pd.read_csv(csv_file, nrows=1).columns[-1]  # Get the last column name
-        latest_week_number = int(latest_week[-1])  # Extract the week number from the column name
+        latest_week_number = int(latest_week[1:])  # Extract the week number from the column name
 
         if week_number == latest_week_number:
             return jsonify({"warning": "Week number is already the latest week."})
