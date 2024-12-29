@@ -4,10 +4,14 @@
   </h2>
   <center><button id="toggle-button" onclick="toggleTables()">Loading data from LiveFPL ...</button></center>
   <br />
-  <table id="data-table" style="display: none;">
-    <thead id="table-header"></thead>
-    <tbody id="data-body"></tbody>
-  </table>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <button id="left-arrow" onclick="shiftLeft()">←</button>
+    <table id="data-table" style="display: none;">
+      <thead id="table-header"></thead>
+      <tbody id="data-body"></tbody>
+    </table>
+    <button id="right-arrow" onclick="shiftRight()">→</button>
+  </div>
 </main>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="{{ url_for('static', filename='fe_script.js') }}"></script>

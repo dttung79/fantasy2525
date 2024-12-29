@@ -1,5 +1,6 @@
-function initializeDataTable(data, leagueId, orderByLatestPoints = false) { // Added parameter
+let currentStartWeek = 0; // Biến để theo dõi tuần bắt đầu hiện tại
 
+function initializeDataTable(data, leagueId, orderByLatestPoints = false) {
     const tableHeader = document.getElementById('table-header');
     const tableBody = document.getElementById('data-body');
     const loadingButton = document.getElementById('toggle-button');
@@ -21,7 +22,7 @@ function initializeDataTable(data, leagueId, orderByLatestPoints = false) { // A
 
     // Sort data by latest points if the parameter is true
     if (orderByLatestPoints) {
-        data = [data[0], ...data.slice(1).sort((a, b) => { // Update this line
+        data = [data[0], ...data.slice(1).sort((a, b) => {
             const latestPointsA = parseInt(a[a.length - 1].split(':')[0]); // Get latest points for team A
             const latestPointsB = parseInt(b[b.length - 1].split(':')[0]); // Get latest points for team B
             return latestPointsB - latestPointsA; // Sort in descending order
@@ -83,6 +84,57 @@ function initializeDataTable(data, leagueId, orderByLatestPoints = false) { // A
     document.getElementById('data-table').style.display = 'table'; // Show the table
     if (orderByLatestPoints)
         drawLineChart(data); // Add this line to draw the chart
+
+    // Hiển thị các cột từ tuần hiện tại
+    const totalWeeks = headers.length - 1; // Trừ cột đầu tiên (Team)
+    currentStartWeek = Math.max(0, totalWeeks - 10); // Bắt đầu từ tuần gần nhất
+    showColumns(currentStartWeek);
+    updateArrowButtons();
+}
+
+function showColumns(startWeek) {
+    const table = document.getElementById('data-table');
+    const rows = table.rows;
+    const totalWeeks = rows[0].cells.length - 1; // Trừ cột đầu tiên (Team)
+    const endWeek = Math.min(startWeek + 10, totalWeeks);
+
+    for (let i = 0; i < rows.length; i++) {
+        for (let j = 1; j < rows[i].cells.length; j++) {
+            if (j >= startWeek + 1 && j <= endWeek) {
+                rows[i].cells[j].style.display = '';
+            } else {
+                rows[i].cells[j].style.display = 'none';
+            }
+        }
+    }
+}
+
+function updateArrowButtons() {
+    const table = document.getElementById('data-table');
+    const totalWeeks = table.rows[0].cells.length - 1; // Trừ cột đầu tiên (Team)
+    const leftArrow = document.getElementById('left-arrow');
+    const rightArrow = document.getElementById('right-arrow');
+
+    leftArrow.disabled = currentStartWeek === 0;
+    rightArrow.disabled = currentStartWeek + 10 >= totalWeeks;
+}
+
+function shiftLeft() {
+    if (currentStartWeek > 0) {
+        currentStartWeek--;
+        showColumns(currentStartWeek);
+        updateArrowButtons();
+    }
+}
+
+function shiftRight() {
+    const table = document.getElementById('data-table');
+    const totalWeeks = table.rows[0].cells.length - 1; // Trừ cột đầu tiên (Team)
+    if (currentStartWeek + 10 < totalWeeks) {
+        currentStartWeek++;
+        showColumns(currentStartWeek);
+        updateArrowButtons();
+    }
 }
 // New function to draw a line chart
 function drawLineChart(data) {
