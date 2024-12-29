@@ -164,7 +164,7 @@ function drawLineChart(data) {
     const traces = sortedTeams.map((team) => {
         const index = teams.indexOf(team);
         return {
-            x: Array.from({ length: weeks }, (_, i) => `Week ${i + 1}`),
+            x: Array.from({ length: weeks }, (_, i) => `W${i + 1}`),
             y: rankings.map(week => week.find(t => t.team === team).rank),
             mode: 'lines+markers',
             name: team,
@@ -202,7 +202,7 @@ function drawLineChart(data) {
 
     // Adjust layout for mobile screens
     if (window.matchMedia("(max-width: 600px)").matches) {
-        layout.xaxis.title = 'Weeks';
+        layout.xaxis.title = '';
         layout.yaxis.title = 'Team Rank';
         layout.xaxis.tickangle = -45; // Rotate x-axis labels
     }

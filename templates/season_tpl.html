@@ -2,49 +2,55 @@
     <h2>
         <center>Live Season Table</center>
     </h2>
-    <center><button id="toggle-button" onclick="toggleTables()">Loading data from LiveFPL ...</button></center>
+    <center><button id="toggle-button" onclick="toggleTables()">Loading data
+            from LiveFPL ...</button></center>
     <br />
-    <table id="data-table" style="display: none;">
-        <thead id="table-header"></thead>
-        <tbody id="data-body"></tbody>
-    </table>
+    <div
+        style="display: flex; justify-content: space-between; align-items: center;">
+        <button id="left-arrow" onclick="shiftLeft()">←</button>
+        <table id="data-table" style="display: none;">
+            <thead id="table-header"></thead>
+            <tbody id="data-body"></tbody>
+        </table>
+        <button id="right-arrow" onclick="shiftRight()">→</button>
+    </div>
     <center>
-        <div id="chart-container" style="width: 100%; height: 800px; margin: 20px auto;">
+        <div id="chart-container"
+            style="width: 100%; height: 800px; margin: 20px auto;">
             <div id="line-chart" width="auto" height="100%"></div>
         </div>
     </center>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="{{ url_for('static', filename='fe_script.js') }}"></script>
 <script>
     const leagueId = '{{ league_id }}'; // Replace with actual league ID
     const apiUrl = `/api/season/${leagueId}`;
-
+  
     // Fetch data from the API
     fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            initializeDataTable(data, leagueId, true);
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            document.getElementById('toggle-button').textContent = 'Error loading data.';
-        });
-
+      .then(response => response.json())
+      .then(data => {
+        initializeDataTable(data, leagueId, true);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        document.getElementById('toggle-button').textContent = 'Error loading data.';
+      });
+  
     // Function to toggle visibility of the tables
     function toggleTables() {
-        const table = document.getElementById('data-table');
-        const button = document.getElementById('toggle-button');
-
-        // Toggle display styles based on current state
-        if (table.style.display === 'none') {
-            table.style.display = 'table'; // Show main table
-            button.textContent = 'Hide Table'; // Update button text
-        } else {
-            table.style.display = 'none'; // Hide main table
-            button.textContent = 'Show Table'; // Update button text
-        }
+      const table = document.getElementById('data-table');
+      const button = document.getElementById('toggle-button');
+  
+      // Toggle display styles based on current state
+      if (table.style.display === 'none') {
+        table.style.display = 'table'; // Show main table
+        button.textContent = 'Hide Table'; // Update button text
+      } else {
+        table.style.display = 'none'; // Hide main table
+        button.textContent = 'Show Table'; // Update button text
+      }
     }
-</script>
+  </script>
